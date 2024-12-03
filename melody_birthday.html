@@ -1,0 +1,228 @@
+<!DOCTYPE html> 
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐</title>
+    <style>
+        /* 页面基础样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            text-align: center;
+            background: linear-gradient(to bottom, #ffffff, #a0cfe5);
+            position: relative; /* 为了定位气球容器 */
+        }
+        .container {
+            position: relative;
+            z-index: 1; /* 调整层级 */
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            margin-top: 50vh;
+            transform: translateY(-50%);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+        .reveal-btn {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #ff7e67;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .gift {
+            display: none;
+            margin-top: 20px;
+        }
+        .gift p {
+            font-size: 1.1em;
+            color: #ff7e67;
+        }
+        .gift textarea {
+            width: 80%;
+            height: 50px;
+            font-size: 1em;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        /* 飘雪效果样式 */
+        .snowflake {
+            font-size: 1.5em;
+            position: fixed;
+            top: -10px;
+            z-index: 0;
+            color: #fff;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        /* 蛋糕下落效果样式 */
+        .cake {
+            font-size: 2em;
+            position: fixed;
+            top: -10px;
+            z-index: 0;
+            user-select: none;
+            pointer-events: none;
+            animation: fallCake linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        @keyframes fallCake {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg) scale(0.5);
+            }
+        }
+        /* 气球样式 */
+        .balloon {
+            position: fixed;
+            bottom: -100px;
+            width: 50px;
+            height: 70px;
+            background-color: red;
+            border-radius: 50% 50% 50% 50%;
+            opacity: 0.8;
+            z-index: 5; /* 确保在文字之上 */
+            animation: rise 5s forwards;
+        }
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background-color: gray;
+        }
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                opacity: 0.8;
+            }
+            100% {
+                bottom: 110vh;
+                opacity: 0;
+            }
+        }
+        /* 署名样式 */
+        .signature {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1.7em;
+            color: #555;
+            z-index: 2;
+            font-style: italic;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .signature:hover {
+            color: #ff7e67;
+        }
+    </style>
+</head>
+<body>
+    <!-- 飘雪容器 -->
+    <div id="snow-container"></div>
+    <!-- 气球容器 -->
+    <div id="balloon-container"></div>
+
+    <div class="container">
+        <h1>佳韵生日快乐！</h1>
+        <p>黄油饼是甜的，混着的眼泪是咸的，就像人生，交杂着各种复杂而美好的味道。<br>不论明天是晴天还是阴天，今天生日要快乐呀~</p>
+        <button class="reveal-btn" onclick="showGift()">看看礼物是什么</button>
+        <div class="gift" id="gift">
+            <p>在海宁过得怎么样呀，天冷了喝点咖啡吧：）</p>
+            <p>长按以下链接，复制并在微信中打开：</p>
+            <textarea readonly>#小程序://瑞幸咖啡/yQxvx9GMzo2Qufv</textarea>
+        </div>
+    </div>
+
+    <!-- 署名 -->
+    <div class="signature">By 夏呓Xiayi</div>
+
+    <script>
+        // 显示礼物链接并启动气球动画
+        function showGift() {
+            document.getElementById('gift').style.display = 'block';
+            startBalloonAnimation();
+            startCakeFall();
+        }
+
+        // 创建飘雪效果
+        const body = document.body;
+        for (let i = 0; i < 50; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.innerHTML = '❄️';
+            body.appendChild(snowflake);
+        }
+
+        // 创建气球上升效果
+        function startBalloonAnimation() {
+            const balloonContainer = document.getElementById('balloon-container');
+            for (let i = 0; i < 100; i++) {
+                const balloon = document.createElement('div');
+                balloon.classList.add('balloon');
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.backgroundColor = getRandomColor();
+                balloon.style.animationDelay = Math.random() * 2 + 's';
+                balloonContainer.appendChild(balloon);
+
+                // 动画结束后移除气球
+                balloon.addEventListener('animationend', () => {
+                    balloon.remove();
+                });
+            }
+        }
+
+        // 创建下落蛋糕效果
+        function startCakeFall() {
+            for (let i = 0; i < 30; i++) {
+                const cake = document.createElement('div');
+                cake.classList.add('cake');
+                cake.style.left = Math.random() * 100 + 'vw';
+                cake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                cake.style.animationDelay = Math.random() * 5 + 's';
+                cake.innerHTML = '🎂';
+                body.appendChild(cake);
+            }
+        }
+
+        // 随机生成颜色
+        function getRandomColor() {
+            const colors = ['#ff7e67', '#f5c6aa', '#fcd5ce', '#a0cfe5', '#bde0fe', '#caffbf'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+    </script>
+</body>
+</html>
